@@ -143,7 +143,7 @@ def _strs(value: Any) -> list[str] | None:
 def _int(value: Any) -> int | None:
     try:
         return int(value) if value is not None and value != "" else None
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return None
 
 

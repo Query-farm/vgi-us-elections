@@ -195,7 +195,7 @@ def read_json(path: Path) -> dict[str, Any]:
     try:
         loaded = json.loads(path.read_text())
         return loaded if isinstance(loaded, dict) else {}
-    except (OSError, ValueError):
+    except OSError, ValueError:
         return {}
 
 

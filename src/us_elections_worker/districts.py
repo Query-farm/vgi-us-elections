@@ -133,7 +133,7 @@ def fetch_lewis(opts: Options, f: LewisFile) -> bytes:
 def _int(value: Any) -> int | None:
     try:
         return int(float(value))
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         return None
 
 

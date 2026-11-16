@@ -66,7 +66,7 @@ def prefilter(table: pa.Table, filters: Any, columns: frozenset[str]) -> pa.Tabl
                 cond = pc.is_in(col, value_set=f.values.cast(col.type))
             else:
                 continue
-        except (pa.ArrowInvalid, pa.ArrowNotImplementedError, TypeError):
+        except pa.ArrowInvalid, pa.ArrowNotImplementedError, TypeError:
             continue  # a type we cannot compare here; the exact filter still applies
         cond = pc.fill_null(cond, False)
         mask = cond if mask is None else pc.and_(mask, cond)
