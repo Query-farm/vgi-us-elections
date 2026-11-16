@@ -36,7 +36,7 @@ INSTALL vgi FROM query_farm;
 LOAD vgi FROM query_farm;
 
 ATTACH 'us_elections' (TYPE vgi,
-  LOCATION 'uvx --from git+https://github.com/Query-farm/vgi-us-elections@v0.1.0 vgi-us-elections-worker');
+  LOCATION 'uvx --from git+https://github.com/Query-farm/vgi-us-elections@v0.1.1 vgi-us-elections-worker');
 
 SELECT census_year, seats FROM us_elections.main.apportionment WHERE state_po = 'CA' ORDER BY census_year;
 ```
