@@ -1,0 +1,61 @@
+{
+ "status": "OK",
+ "data": {
+  "id": 3072251,
+  "persistentUrl": "https://doi.org/10.7910/DVN/42MVDX",
+  "latestVersion": {
+   "versionNumber": 10,
+   "versionMinorNumber": 1,
+   "versionState": "RELEASED",
+   "releaseTime": "2026-09-04T16:15:49Z",
+   "license": {
+    "name": "CC0 1.0",
+    "uri": "http://creativecommons.org/publicdomain/zero/1.0",
+    "iconUri": "https://licensebuttons.net/p/zero/1.0/88x31.png",
+    "rightsIdentifier": "CC0-1.0",
+    "rightsIdentifierScheme": "SPDX",
+    "schemeUri": "https://spdx.org/licenses/",
+    "languageCode": "en"
+   },
+   "guestbookId": null,
+   "files": [
+    {
+     "label": "1976-2024-president.csv",
+     "dataFile": {
+      "id": 13887042,
+      "filename": "1976-2024-president.csv",
+      "contentType": "text/comma-separated-values",
+      "filesize": 514108,
+      "originalFileFormat": null,
+      "originalFileSize": null,
+      "md5": "405af83db7625cb35d8c19a5ebe029ff"
+     }
+    },
+    {
+     "label": "codebook-us-president-1976-2020.md",
+     "dataFile": {
+      "id": 7241480,
+      "filename": "codebook-us-president-1976-2020.md",
+      "contentType": "text/markdown",
+      "filesize": 3176,
+      "originalFileFormat": null,
+      "originalFileSize": null,
+      "md5": "d40a38c2847781b54f002aa893921ef8"
+     }
+    },
+    {
+     "label": "sources-president.tab",
+     "dataFile": {
+      "id": 4304791,
+      "filename": "sources-president.tab",
+      "contentType": "text/tab-separated-values",
+      "filesize": 5038,
+      "originalFileFormat": "text/csv",
+      "originalFileSize": 4580,
+      "md5": "ee979c4c5ea7a6df903db86dab3f869e"
+     }
+    }
+   ]
+  }
+ }
+}

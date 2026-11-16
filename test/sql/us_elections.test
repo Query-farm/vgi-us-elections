@@ -1,0 +1,329 @@
+# name: test/sql/us_elections.test
+# description: SQL-level tests for the us_elections worker against the offline fixture server
+# group: [us_elections]
+
+require vgi
+
+require-env US_ELECTIONS_WORKER
+
+require-env US_ELECTIONS_MOCK_API
+
+require-env US_ELECTIONS_CACHE_DIR
+
+statement ok
+ATTACH 'us_elections' (TYPE vgi, LOCATION '{US_ELECTIONS_WORKER}',
+    DATAVERSE_URL '{US_ELECTIONS_MOCK_API}/dataverse',
+    LEWIS_BASE_URL '{US_ELECTIONS_MOCK_API}/lewis',
+    CENSUS_CD_BASE_URL '{US_ELECTIONS_MOCK_API}/census',
+    FEC_BASE_URL '{US_ELECTIONS_MOCK_API}/fec/v1',
+    CACHE_DIR '{US_ELECTIONS_CACHE_DIR}');
+
+# ---------------------------------------------------------------- catalog shape
+
+query T
+SELECT table_name FROM duckdb_tables() WHERE database_name = 'us_elections' ORDER BY 1;
+----
+apportionment
+county_president_results
+house_results
+president_results
+senate_results
+states
+
+# ---------------------------------------------------------------- reference tables (bundled)
+
+query TII
+SELECT state_po, seats, seat_change FROM us_elections.main.apportionment
+WHERE census_year = 2020 AND seat_change > 0 ORDER BY seat_change DESC, state_po;
+----
+TX	38	2
+CO	8	1
+FL	28	1
+MT	2	1
+NC	14	1
+OR	6	1
+
+query II
+SELECT census_year, sum(seats) FROM us_elections.main.apportionment GROUP BY ALL HAVING census_year >= 1990 ORDER BY 1;
+----
+1990	435
+2000	435
+2010	435
+2020	435
+
+query TT
+SELECT state_fips, state FROM us_elections.main.states WHERE state_po IN ('CA', 'DC', 'PR') ORDER BY state_fips;
+----
+06	California
+11	District of Columbia
+72	Puerto Rico
+
+# ---------------------------------------------------------------- scalars
+
+query TT
+SELECT d, us_elections.main.normalize_district(d) FROM (VALUES ('AL'), ('at-large'), ('7'), ('07'), ('12.0'), ('98'), ('ZZ'), (NULL)) t(d) ORDER BY d NULLS LAST;
+----
+07	07
+12.0	12
+7	07
+98	98
+AL	00
+ZZ	NULL
+at-large	00
+NULL	NULL
+
+query II
+SELECT y, us_elections.main.congress_for_year(y) FROM (VALUES (1788), (2023), (2024), (NULL)) t(y) ORDER BY y NULLS LAST;
+----
+1788	1
+2023	118
+2024	119
+NULL	NULL
+
+# ---------------------------------------------------------------- president / senate (real MEDSL subsets)
+
+query TTIR
+SELECT candidate, party_simplified, candidatevotes, round(100 * vote_share, 1)
+FROM us_elections.main.president_results WHERE year = 2024 AND state_po = 'DE' AND NOT writein
+ORDER BY candidatevotes DESC LIMIT 3;
+----
+HARRIS, KAMALA D.	DEMOCRAT	289758	56.5
+TRUMP, DONALD J.	REPUBLICAN	214351	41.8
+KENNEDY, ROBERT F. JR	OTHER	4636	0.9
+
+# Pushdown: filters on year / state narrow the scan; results equal the unfiltered scan's.
+query I
+SELECT count(*) FROM us_elections.main.president_results WHERE year IN (2020, 2024) AND state_po = 'DE';
+----
+37
+
+query I
+SELECT count(*) FROM (SELECT * FROM us_elections.main.president_results) WHERE year IN (2020, 2024) AND state_po = 'DE';
+----
+37
+
+query TTT
+SELECT DISTINCT state_fips, state, typeof(year) FROM us_elections.main.president_results WHERE state_po = 'AZ';
+----
+04	Arizona	INTEGER
+
+query TTR
+SELECT state_po, candidate, round(100 * vote_share, 1)
+FROM us_elections.main.senate_results WHERE year = 2024 AND stage = 'gen' AND NOT special
+QUALIFY row_number() OVER (PARTITION BY state_po ORDER BY candidatevotes DESC) = 1 ORDER BY state_po;
+----
+AZ	RUBEN GALLEGO	50.1
+DE	LISA BLUNT ROCHESTER	56.6
+NE	DEB FISCHER	53.2
+WY	JOHN BARRASSO	73.2
+
+query II
+SELECT congress, count(DISTINCT state_po) FROM us_elections.main.senate_results WHERE year = 2024 GROUP BY ALL;
+----
+119	4
+
+# ---------------------------------------------------------------- guestbook-gated House / county files
+
+statement error
+SELECT count(*) FROM us_elections.main.house_results;
+----
+<REGEX>:.*guestbook.*
+
+statement error
+SELECT count(*) FROM us_elections.main.county_president_results;
+----
+<REGEX>:.*guestbook.*
+
+statement ok
+ATTACH 'us_elections' AS elections_gb (TYPE vgi, LOCATION '{US_ELECTIONS_WORKER}',
+    DATAVERSE_URL '{US_ELECTIONS_MOCK_API}/dataverse',
+    CACHE_DIR '{US_ELECTIONS_CACHE_DIR}',
+    GUESTBOOK_NAME 'Test Runner', GUESTBOOK_EMAIL 'tests@example.invalid',
+    GUESTBOOK_INSTITUTION 'Fixture Lab', GUESTBOOK_POSITION 'Robot');
+
+query ITTTTR
+SELECT year, congress, state_po, district, candidate, round(vote_share, 4)
+FROM elections_gb.main.house_results WHERE state_po = 'DE' AND stage = 'gen' ORDER BY year, candidatevotes DESC;
+----
+2022	118	DE	00	CANDIDATE ALPHA	0.5524
+2022	118	DE	00	CANDIDATE BRAVO	0.4279
+2022	118	DE	00	CANDIDATE CHARLIE	0.0198
+2024	119	DE	00	CANDIDATE DELTA	0.5902
+2024	119	DE	00	CANDIDATE ECHO	0.4098
+
+# Fusion candidates: one row per party line; sum them. Derived party_simplified.
+query TIT
+SELECT candidate, sum(candidatevotes), string_agg(party_simplified, ',' ORDER BY party_simplified)
+FROM elections_gb.main.house_results WHERE state_po = 'NY' AND district = '07' AND NOT writein GROUP BY ALL ORDER BY 2 DESC;
+----
+CANDIDATE JULIET	180000	DEMOCRAT,OTHER
+CANDIDATE KILO	20000	REPUBLICAN
+
+# A write-in row with 'NA' votes is NULL, not an error.
+query II
+SELECT count(*), count(candidatevotes) FROM elections_gb.main.house_results WHERE writein;
+----
+1	0
+
+query TT
+SELECT DISTINCT state_po, district FROM elections_gb.main.house_results WHERE year = 2024 ORDER BY ALL;
+----
+DE	00
+NY	07
+RI	01
+RI	02
+WY	00
+
+query TTR
+SELECT county_fips, county_name, round(100 * sum(candidatevotes) FILTER (WHERE party = 'DEMOCRAT') / sum(candidatevotes), 1)
+FROM elections_gb.main.county_president_results WHERE year = 2024 AND state_po = 'DE' GROUP BY ALL ORDER BY county_fips;
+----
+10001	KENT	50.0
+10003	NEW CASTLE	66.7
+10005	SUSSEX	42.9
+
+query TTTI
+SELECT state_fips, county_fips, mode, sum(candidatevotes) FROM elections_gb.main.county_president_results
+WHERE year = 2020 GROUP BY ALL ORDER BY ALL;
+----
+01	01001	absentee	4000
+01	01001	election day	23000
+02	NULL	total	100
+
+# The first catalog now reads the cached files too (same cache directory).
+query I
+SELECT count(*) FROM us_elections.main.house_results WHERE year = 2024;
+----
+13
+
+query TTT
+SELECT item, status, dataset_version FROM us_elections.main.cache_info() WHERE source = 'medsl' ORDER BY item;
+----
+county_president	cached	20.0
+house	cached	15.0
+president	cached	10.1
+senate	cached	8.0
+
+# ---------------------------------------------------------------- district boundaries
+
+query ITTIITT
+SELECT congress, state_po, district, start_congress, end_congress, typeof(geometry), hex(geometry::BLOB)[1:10]
+FROM us_elections.main.districts(118, state := 'DE');
+----
+118	DE	00	115	119	GEOMETRY('OGC:CRS84')	0106000000
+
+query IT
+SELECT congress, district FROM us_elections.main.districts(119, state := 'Rhode Island') ORDER BY district;
+----
+119	01
+119	02
+
+query IIT
+SELECT start_congress, end_congress, district FROM us_elections.main.districts(100, state := '10');
+----
+98	102	00
+
+# No file covers this state and Congress in the fixture server: a clear HTTP error.
+statement error
+SELECT * FROM us_elections.main.districts(50, state := 'DE');
+----
+<REGEX>:.*HTTP 404.*
+
+statement error
+SELECT * FROM us_elections.main.districts(118, state := 'Atlantis');
+----
+<REGEX>:.*unknown state.*
+
+statement error
+SELECT * FROM us_elections.main.districts(120);
+----
+<REGEX>:.*
+
+query TTTIT
+SELECT state_po, district, geoid, (land_area_m2 > 0)::INT, typeof(geometry)
+FROM us_elections.main.current_districts(state := 'WY', resolution := '20m');
+----
+WY	00	5600	1	GEOMETRY('OGC:CRS84')
+
+query II
+SELECT count(*) FILTER (WHERE district <> '98'), count(*) FILTER (WHERE district = '98')
+FROM us_elections.main.current_districts(resolution := '20m');
+----
+435	2
+
+query TI
+SELECT state_po, count(*) FROM us_elections.main.current_districts(resolution := '20m') GROUP BY ALL ORDER BY 2 DESC, 1 LIMIT 3;
+----
+CA	52
+TX	38
+FL	28
+
+# Districts join to results on (congress, state_po, district).
+query TT
+SELECT r.candidate, d.district FROM elections_gb.main.house_results r
+JOIN us_elections.main.current_districts(state := 'WY', resolution := '20m') d
+  ON d.congress = r.congress AND d.state_po = r.state_po AND d.district = r.district
+WHERE r.year = 2024 ORDER BY r.candidatevotes DESC LIMIT 1;
+----
+CANDIDATE LIMA	00
+
+# ---------------------------------------------------------------- FEC (needs the secret)
+
+statement error
+SELECT * FROM us_elections.main.fec_candidates(state := 'DE');
+----
+<REGEX>:.*CREATE SECRET.*
+
+statement ok
+CREATE SECRET fec_bad (TYPE us_elections_fec, API_KEY 'wrong-key');
+
+statement error
+SELECT * FROM us_elections.main.fec_candidates(state := 'DE');
+----
+<REGEX>:.*HTTP 403.*
+
+statement ok
+DROP SECRET fec_bad;
+
+statement ok
+CREATE SECRET fec (TYPE us_elections_fec, API_KEY 'test-key');
+
+# Two pages of five, streamed as two batches.
+query I
+SELECT count(*) FROM us_elections.main.fec_candidates(election_year := 2024, state := 'DE');
+----
+10
+
+query TTTT
+SELECT candidate_id, name, office, district FROM us_elections.main.fec_candidates(election_year := 2024, state := 'DE')
+WHERE has_raised_funds ORDER BY office, name;
+----
+H6DE00206	BLUNT ROCHESTER, LISA	H	00
+H4DE00052	DAVIS, COLLEEN	H	00
+H4DE00060	HALL, DONYALE LONDON	H	00
+S4DE00060	BLUNT ROCHESTER, LISA	S	00
+S8DE00079	CARPER, THOMAS R.	S	00
+
+statement error
+SELECT * FROM us_elections.main.fec_candidates(office := 'H');
+----
+<REGEX>:.*at least one of.*
+
+query TTT
+SELECT name, typeof(receipts), receipts FROM us_elections.main.fec_candidate_totals(2024, state := 'DE') ORDER BY receipts DESC LIMIT 2;
+----
+BLUNT ROCHESTER, LISA	DECIMAL(18,2)	9934497.35
+MCBRIDE, SARAH ELIZABETH	DECIMAL(18,2)	4091643.35
+
+query TI
+SELECT committee_type_full, count(*) FROM us_elections.main.fec_committees(cycle := 2024, state := 'DE') GROUP BY ALL ORDER BY 2 DESC, 1;
+----
+Super PAC (Independent Expenditure-Only)	4
+House	1
+
+query TRI
+SELECT state, total, contributions FROM us_elections.main.fec_contributions_by_state('S4DE00060', 2024) ORDER BY total DESC LIMIT 3;
+----
+DE	812437.43	4009
+CA	600302.08	1604
+NY	424739.80	971

@@ -1,0 +1,61 @@
+{
+ "status": "OK",
+ "data": {
+  "id": 3072248,
+  "persistentUrl": "https://doi.org/10.7910/DVN/PEJ5QU",
+  "latestVersion": {
+   "versionNumber": 8,
+   "versionMinorNumber": 0,
+   "versionState": "RELEASED",
+   "releaseTime": "2026-05-11T16:13:52Z",
+   "license": {
+    "name": "CC0 1.0",
+    "uri": "http://creativecommons.org/publicdomain/zero/1.0",
+    "iconUri": "https://licensebuttons.net/p/zero/1.0/88x31.png",
+    "rightsIdentifier": "CC0-1.0",
+    "rightsIdentifierScheme": "SPDX",
+    "schemeUri": "https://spdx.org/licenses/",
+    "languageCode": "en"
+   },
+   "guestbookId": null,
+   "files": [
+    {
+     "label": "1976-2024-senate-state.tab",
+     "dataFile": {
+      "id": 13887039,
+      "filename": "1976-2024-senate-state.tab",
+      "contentType": "text/tab-separated-values",
+      "filesize": 632787,
+      "originalFileFormat": "text/comma-separated-values",
+      "originalFileSize": 530501,
+      "md5": "0f8b51cf0f77a2ef0bff992f7a64d1b4"
+     }
+    },
+    {
+     "label": "codebook-us-senate-1976\u20132024.md",
+     "dataFile": {
+      "id": 6708560,
+      "filename": "codebook-us-senate-1976\u20132024.md",
+      "contentType": "text/markdown",
+      "filesize": 3700,
+      "originalFileFormat": null,
+      "originalFileSize": null,
+      "md5": "1cab4bc42b0ca632223b9b9a90c65f30"
+     }
+    },
+    {
+     "label": "sources-senate.tab",
+     "dataFile": {
+      "id": 4304792,
+      "filename": "sources-senate.tab",
+      "contentType": "text/tab-separated-values",
+      "filesize": 3354,
+      "originalFileFormat": "text/csv",
+      "originalFileSize": 3049,
+      "md5": "d92c44441367c4acda59e8779dc62155"
+     }
+    }
+   ]
+  }
+ }
+}

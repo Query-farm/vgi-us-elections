@@ -1,0 +1,52 @@
+# vgi-lint settings for this worker: https://github.com/Query-farm/vgi-lint-check
+# `make lint-explain`, `vgi-lint lint` in this directory, and CI's metadata job all
+# read this file. Look up a rule with `vgi-lint explain VGI123`; print the metadata tag
+# contract with `vgi-lint spec`.
+
+# The worker to attach, relative to this directory. Build it first with `make build`.
+location = ".venv/bin/vgi-us-elections-worker"
+
+# Fail on warnings while you build. Raise this to "info" before you publish the worker.
+fail_on = "info"
+
+# Waive a finding only with a kind and a reason, so the waiver can be audited:
+#   domain-exemption  permanent and legitimate for this worker
+#   deferred          a real defect you will fix; add expires = "YYYY-MM-DD"
+#   timing            slow or flaky because of the environment, not the metadata
+#   tooling-bug       the linter is wrong; report it upstream
+ignore = [
+  # { code = "VGI146", kind = "domain-exemption", reason = "every entry point needs a key" },
+]
+
+# Adopting the gate on a worker that already has findings? Record them once with
+#   vgi-lint lint --baseline vgi-lint-baseline --update-baseline
+# and uncomment the next line. Only new findings fail after that.
+# baseline = "vgi-lint-baseline"
+
+[per_object."us_elections.main.cache_info"]
+ignore = [
+  { code = "VGI311", kind = "domain-exemption", reason = "reports the mutable state of the local download cache (which files are present, sizes, download times), which changes between calls; it is a status probe, not a fixed dataset" },
+]
+
+[per_object."us_elections.main.apportionment"]
+ignore = [{ code = "VGI144", kind = "domain-exemption", reason = "'apportionment' is the Census Bureau's name for the dataset and a mass noun; a plural would read wrong" }]
+
+# MEDSL returns have no unique row key: write-in aggregates have NULL candidates, fusion
+# candidates repeat per party line and some states repeat rows per vote mode. A primary key
+# would be a false attestation.
+[per_object."us_elections.main.house_results"]
+ignore = [
+  { code = "VGI807", kind = "domain-exemption", reason = "MEDSL returns have no unique key (NULL write-in candidates, one row per fusion party line and vote mode)" },
+]
+
+[per_object."us_elections.main.county_president_results"]
+ignore = [
+  { code = "VGI807", kind = "domain-exemption", reason = "MEDSL county returns have no unique key (rows repeat per vote mode; non-county units have NULL FIPS)" },
+]
+
+[per_object."us_elections.main.senate_results"]
+ignore = [{ code = "VGI807", kind = "domain-exemption", reason = "MEDSL returns have no unique key (NULL write-in candidates; repeated rows per vote mode in some states)" }]
+
+[per_object."us_elections.main.president_results"]
+ignore = [{ code = "VGI807", kind = "domain-exemption", reason = "MEDSL returns have no unique key (write-in aggregates have NULL or repeated candidate names)" }]
+

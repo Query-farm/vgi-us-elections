@@ -1,0 +1,61 @@
+{
+ "status": "OK",
+ "data": {
+  "id": 3239428,
+  "persistentUrl": "https://doi.org/10.7910/DVN/VOQCHQ",
+  "latestVersion": {
+   "versionNumber": 20,
+   "versionMinorNumber": 0,
+   "versionState": "RELEASED",
+   "releaseTime": "2026-02-25T19:00:32Z",
+   "license": {
+    "name": "CC0 1.0",
+    "uri": "http://creativecommons.org/publicdomain/zero/1.0",
+    "iconUri": "https://licensebuttons.net/p/zero/1.0/88x31.png",
+    "rightsIdentifier": "CC0-1.0",
+    "rightsIdentifierScheme": "SPDX",
+    "schemeUri": "https://spdx.org/licenses/",
+    "languageCode": "en"
+   },
+   "guestbookId": 458,
+   "files": [
+    {
+     "label": "countypres_2000-2024.tab",
+     "dataFile": {
+      "id": 13573089,
+      "filename": "countypres_2000-2024.tab",
+      "contentType": "text/tab-separated-values",
+      "filesize": 9845506,
+      "originalFileFormat": "text/comma-separated-values",
+      "originalFileSize": 10222208,
+      "md5": "bd6661282936006b4ef4f5ee71418f3e"
+     }
+    },
+    {
+     "label": "County Presidential Returns 2000-2024.md",
+     "dataFile": {
+      "id": 11723285,
+      "filename": "County Presidential Returns 2000-2024.md",
+      "contentType": "text/markdown",
+      "filesize": 2604,
+      "originalFileFormat": null,
+      "originalFileSize": null,
+      "md5": "bb49e28faf9b18266665ab01dccf295f"
+     }
+    },
+    {
+     "label": "sources-president.tab",
+     "dataFile": {
+      "id": 10493708,
+      "filename": "sources-president.tab",
+      "contentType": "text/tab-separated-values",
+      "filesize": 5038,
+      "originalFileFormat": "text/csv",
+      "originalFileSize": 4580,
+      "md5": "ee979c4c5ea7a6df903db86dab3f869e"
+     }
+    }
+   ]
+  }
+ }
+}

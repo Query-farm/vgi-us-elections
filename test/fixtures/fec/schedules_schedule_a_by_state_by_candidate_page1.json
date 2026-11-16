@@ -1,0 +1,428 @@
+{
+ "api_version": "1.0",
+ "pagination": {
+  "count": 52,
+  "is_count_exact": true,
+  "page": 1,
+  "pages": 1,
+  "per_page": 100
+ },
+ "results": [
+  {
+   "candidate_id": "S4DE00060",
+   "count": 45,
+   "cycle": 2024,
+   "state": "AK",
+   "state_full": "Alaska",
+   "total": 2247.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 38,
+   "cycle": 2024,
+   "state": "AL",
+   "state_full": "Alabama",
+   "total": 5489.95
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 37,
+   "cycle": 2024,
+   "state": "AR",
+   "state_full": "Arkansas",
+   "total": 1905.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 84,
+   "cycle": 2024,
+   "state": "AZ",
+   "state_full": "Arizona",
+   "total": 23294.5
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 1604,
+   "cycle": 2024,
+   "state": "CA",
+   "state_full": "California",
+   "total": 600302.08
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 195,
+   "cycle": 2024,
+   "state": "CO",
+   "state_full": "Colorado",
+   "total": 61536.34
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 166,
+   "cycle": 2024,
+   "state": "CT",
+   "state_full": "Connecticut",
+   "total": 59309.5
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 531,
+   "cycle": 2024,
+   "state": "DC",
+   "state_full": "District Of Columbia",
+   "total": 386926.89
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 4009,
+   "cycle": 2024,
+   "state": "DE",
+   "state_full": "Delaware",
+   "total": 812437.43
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 422,
+   "cycle": 2024,
+   "state": "FL",
+   "state_full": "Florida",
+   "total": 152989.5
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 194,
+   "cycle": 2024,
+   "state": "GA",
+   "state_full": "Georgia",
+   "total": 91590.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 61,
+   "cycle": 2024,
+   "state": "HI",
+   "state_full": "Hawaii",
+   "total": 5121.5
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 38,
+   "cycle": 2024,
+   "state": "IA",
+   "state_full": "Iowa",
+   "total": 7094.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 13,
+   "cycle": 2024,
+   "state": "ID",
+   "state_full": "Idaho",
+   "total": 520.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 382,
+   "cycle": 2024,
+   "state": "IL",
+   "state_full": "Illinois",
+   "total": 150261.39
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 88,
+   "cycle": 2024,
+   "state": "IN",
+   "state_full": "Indiana",
+   "total": 13373.5
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 11,
+   "cycle": 2024,
+   "state": "KS",
+   "state_full": "Kansas",
+   "total": 1810.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 23,
+   "cycle": 2024,
+   "state": "KY",
+   "state_full": "Kentucky",
+   "total": 11332.5
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 19,
+   "cycle": 2024,
+   "state": "LA",
+   "state_full": "Louisiana",
+   "total": 16205.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 423,
+   "cycle": 2024,
+   "state": "MA",
+   "state_full": "Massachusetts",
+   "total": 251310.5
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 573,
+   "cycle": 2024,
+   "state": "MD",
+   "state_full": "Maryland",
+   "total": 280210.13
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 19,
+   "cycle": 2024,
+   "state": "ME",
+   "state_full": "Maine",
+   "total": 8921.22
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 174,
+   "cycle": 2024,
+   "state": "MI",
+   "state_full": "Michigan",
+   "total": 58687.5
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 93,
+   "cycle": 2024,
+   "state": "MN",
+   "state_full": "Minnesota",
+   "total": 8366.5
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 43,
+   "cycle": 2024,
+   "state": "MO",
+   "state_full": "Missouri",
+   "total": 6266.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 5,
+   "cycle": 2024,
+   "state": "MS",
+   "state_full": "Mississippi",
+   "total": 1460.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 18,
+   "cycle": 2024,
+   "state": "MT",
+   "state_full": "Montana",
+   "total": 3250.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 182,
+   "cycle": 2024,
+   "state": "NC",
+   "state_full": "North Carolina",
+   "total": 22759.61
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 12,
+   "cycle": 2024,
+   "state": "ND",
+   "state_full": "North Dakota",
+   "total": 598.33
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 30,
+   "cycle": 2024,
+   "state": "NE",
+   "state_full": "Nebraska",
+   "total": 2780.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 53,
+   "cycle": 2024,
+   "state": "NH",
+   "state_full": "New Hampshire",
+   "total": 7670.6
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 314,
+   "cycle": 2024,
+   "state": "NJ",
+   "state_full": "New Jersey",
+   "total": 69882.53
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 68,
+   "cycle": 2024,
+   "state": "NM",
+   "state_full": "New Mexico",
+   "total": 7322.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 49,
+   "cycle": 2024,
+   "state": "NV",
+   "state_full": "Nevada",
+   "total": 4796.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 971,
+   "cycle": 2024,
+   "state": "NY",
+   "state_full": "New York",
+   "total": 424739.8
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 214,
+   "cycle": 2024,
+   "state": "OH",
+   "state_full": "Ohio",
+   "total": 28672.58
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 183,
+   "cycle": 2024,
+   "state": "OK",
+   "state_full": "Oklahoma",
+   "total": 17070.5
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 140,
+   "cycle": 2024,
+   "state": "OR",
+   "state_full": "Oregon",
+   "total": 17187.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 514,
+   "cycle": 2024,
+   "state": "PA",
+   "state_full": "Pennsylvania",
+   "total": 149864.33
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 28,
+   "cycle": 2024,
+   "state": "RI",
+   "state_full": "Rhode Island",
+   "total": 6000.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 85,
+   "cycle": 2024,
+   "state": "SC",
+   "state_full": "South Carolina",
+   "total": 36955.4
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 19,
+   "cycle": 2024,
+   "state": "SD",
+   "state_full": "South Dakota",
+   "total": 257.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 107,
+   "cycle": 2024,
+   "state": "TN",
+   "state_full": "Tennessee",
+   "total": 30424.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 493,
+   "cycle": 2024,
+   "state": "TX",
+   "state_full": "Texas",
+   "total": 201358.18
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 22,
+   "cycle": 2024,
+   "state": "UT",
+   "state_full": "Utah",
+   "total": 4800.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 431,
+   "cycle": 2024,
+   "state": "VA",
+   "state_full": "Virginia",
+   "total": 167928.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 16,
+   "cycle": 2024,
+   "state": "VT",
+   "state_full": "Vermont",
+   "total": 3076.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 383,
+   "cycle": 2024,
+   "state": "WA",
+   "state_full": "Washington",
+   "total": 85650.72
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 117,
+   "cycle": 2024,
+   "state": "WI",
+   "state_full": "Wisconsin",
+   "total": 37239.83
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 44,
+   "cycle": 2024,
+   "state": "WV",
+   "state_full": "West Virginia",
+   "total": 3882.5
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 3,
+   "cycle": 2024,
+   "state": "WY",
+   "state_full": "Wyoming",
+   "total": 6850.0
+  },
+  {
+   "candidate_id": "S4DE00060",
+   "count": 4,
+   "cycle": 2024,
+   "state": "ZZ",
+   "state_full": "Foreign Countries",
+   "total": 2600.0
+  }
+ ]
+}

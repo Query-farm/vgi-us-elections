@@ -1,0 +1,64 @@
+# Private graders for the public vgi.agent_test_tasks in the worker's catalog metadata.
+# `vgi-lint lint --ai` runs an agent on each prompt and grades it.
+# MEDSL and Census apportionment are published historical data, so reference_sql
+# (compared at grading time) is stable; FEC data is live and has no task here.
+tasks:
+  - name: delaware_2024_president
+    reference_sql: >-
+      SELECT round(100 * vote_share, 1) AS pct FROM us_elections.main.president_results
+      WHERE year = 2024 AND state_po = 'DE' AND party_simplified = 'DEMOCRAT'
+  - name: seats_gained_2020
+    reference_sql: >-
+      SELECT state, seat_change FROM us_elections.main.apportionment
+      WHERE census_year = 2020 AND seat_change > 0 ORDER BY seat_change DESC, state
+  - name: california_seats_history
+    reference_sql: >-
+      SELECT census_year, seats FROM us_elections.main.apportionment
+      WHERE state_po = 'CA' AND census_year BETWEEN 1950 AND 2020 ORDER BY census_year
+  - name: senate_close_races_2024
+    reference_sql: >-
+      WITH ranked AS (
+        SELECT state_po, candidate, vote_share,
+               row_number() OVER (PARTITION BY state_po ORDER BY candidatevotes DESC) AS rk
+        FROM us_elections.main.senate_results
+        WHERE year = 2024 AND stage = 'gen' AND NOT special)
+      SELECT w.state_po, w.candidate, round(100 * (w.vote_share - r.vote_share), 2) AS margin_pts
+      FROM ranked w JOIN ranked r ON w.state_po = r.state_po AND w.rk = 1 AND r.rk = 2
+      WHERE w.vote_share - r.vote_share < 0.02 ORDER BY margin_pts
+  - name: normalize_at_large
+    reference_sql: >-
+      SELECT us_elections.main.normalize_district('AL') AS al,
+             us_elections.main.normalize_district('7') AS seven,
+             us_elections.main.normalize_district('12.0') AS twelve
+  - name: congress_elected_2022
+    reference_sql: SELECT us_elections.main.congress_for_year(2022) AS congress
+  - name: fips_for_nebraska
+    reference_sql: SELECT state_fips FROM us_elections.main.states WHERE state_po = 'NE'
+  - name: wyoming_districts_100th
+    reference_sql: >-
+      SELECT count(*) AS districts, min(district) AS district
+      FROM us_elections.main.districts(100, state := 'WY')
+  - name: largest_district_119
+    reference_sql: >-
+      SELECT state_po, district FROM us_elections.main.current_districts(resolution := '20m')
+      ORDER BY land_area_m2 DESC LIMIT 1
+  - name: cached_sources
+    reference_sql: SELECT DISTINCT source FROM us_elections.main.cache_info() ORDER BY source
+  # Needs the guestbook-gated House and county files (GUESTBOOK_* ATTACH options or a manual download).
+  - name: delaware_house_2024_and_counties
+    reference_sql: >-
+      SELECT (SELECT candidate FROM us_elections.main.house_results
+              WHERE year = 2024 AND state_po = 'DE' AND stage = 'gen'
+              ORDER BY candidatevotes DESC LIMIT 1) AS house_winner,
+             (SELECT county_name FROM us_elections.main.county_president_results
+              WHERE year = 2024 AND state_po = 'DE' GROUP BY county_name
+              ORDER BY sum(candidatevotes) FILTER (WHERE party = 'DEMOCRAT') / sum(candidatevotes) DESC
+              LIMIT 1) AS top_dem_county
+  # Live FEC data and an api.data.gov key (us_elections_fec secret): assert the facts hold now.
+  - name: delaware_senate_money_2024
+    check_sql: >-
+      WITH top AS (SELECT candidate_id FROM us_elections.main.fec_candidate_totals(2024, state := 'DE', office := 'S')
+                   ORDER BY receipts DESC NULLS LAST LIMIT 1)
+      SELECT (SELECT count(*) FROM us_elections.main.fec_candidates(candidate_id := (SELECT candidate_id FROM top))) = 1
+         AND (SELECT count(*) FROM us_elections.main.fec_committees(candidate_id := (SELECT candidate_id FROM top))) >= 1
+         AND (SELECT count(*) FROM us_elections.main.fec_contributions_by_state((SELECT candidate_id FROM top), 2024)) > 0

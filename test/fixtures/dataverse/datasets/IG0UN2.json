@@ -1,0 +1,49 @@
+{
+ "status": "OK",
+ "data": {
+  "id": 3059095,
+  "persistentUrl": "https://doi.org/10.7910/DVN/IG0UN2",
+  "latestVersion": {
+   "versionNumber": 15,
+   "versionMinorNumber": 0,
+   "versionState": "RELEASED",
+   "releaseTime": "2026-03-09T17:49:25Z",
+   "license": {
+    "name": "CC0 1.0",
+    "uri": "http://creativecommons.org/publicdomain/zero/1.0",
+    "iconUri": "https://licensebuttons.net/p/zero/1.0/88x31.png",
+    "rightsIdentifier": "CC0-1.0",
+    "rightsIdentifierScheme": "SPDX",
+    "schemeUri": "https://spdx.org/licenses/",
+    "languageCode": "en"
+   },
+   "guestbookId": 458,
+   "files": [
+    {
+     "label": "1976-2024-house.tab",
+     "dataFile": {
+      "id": 13592823,
+      "filename": "1976-2024-house.tab",
+      "contentType": "text/tab-separated-values",
+      "filesize": 4229898,
+      "originalFileFormat": "text/tsv",
+      "originalFileSize": 4156562,
+      "md5": "a9566ac393913a1af343284e837c17bb"
+     }
+    },
+    {
+     "label": "codebook-us-house-1976\u20132024.md",
+     "dataFile": {
+      "id": 12066703,
+      "filename": "codebook-us-house-1976\u20132024.md",
+      "contentType": "text/markdown",
+      "filesize": 5412,
+      "originalFileFormat": null,
+      "originalFileSize": null,
+      "md5": "4ca4082f75b976b7245c00126615cd2f"
+     }
+    }
+   ]
+  }
+ }
+}
